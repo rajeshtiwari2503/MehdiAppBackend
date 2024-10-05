@@ -8,7 +8,13 @@ const app =express();
 
 const connectionDB=require("./utils/db")
 
-app.use("/api/auth",router)
+app.use(express.json());
+
+const authRouter=require("./router/auth-router")
+
+// app.use("/api/auth",router)
+  
+app.use(authRouter)
 
 app.get("/",(req,res)=>{
     res.status(200).send("Welcome to SMENHDI APP")
