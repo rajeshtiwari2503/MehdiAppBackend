@@ -49,6 +49,28 @@ const customerLogin = async (req, res) => {
 
     }
 }
+const getProfileById = async (req, res) => {
+    try {
+      let _id = req.params.id;
+  
+      // Fetch data from all models concurrently
+      const [  userData] = await Promise.all([
+        Customer.findById(_id),
+     
+      ]);
+  
+      // Combine the data into a single response
+      const combinedData = {
+       
+        user: userData,
+     
+      };
+  
+      res.send(combinedData);
+    } catch (err) {
+      res.status(400).send(err);
+    }
+  };
+  
 
-
-module.exports = { customerRegisteration, customerLogin }
+module.exports = { customerRegisteration, customerLogin ,getProfileById}
