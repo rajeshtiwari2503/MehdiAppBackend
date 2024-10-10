@@ -2,7 +2,7 @@
 const Customer = require("../models/user-model");
 
 
-const customerRegisteration = async (req, res) => {
+const registeration = async (req, res) => {
     try {
         const { userName, email, contact, password } = req.body;
 
@@ -33,7 +33,7 @@ const customerRegisteration = async (req, res) => {
 
 
 
-const customerLogin = async (req, res) => {
+const login = async (req, res) => {
     try {
         const { email, password } = req.body;
         const user = await Customer.findOne({ email })
@@ -71,6 +71,50 @@ const getProfileById = async (req, res) => {
       res.status(400).send(err);
     }
   };
-  
+  const getAllUser = async (req, res) => {
+    try {
+        const data = await Customer.find({}).sort({ _id: -1 });
+        res.send(data);
+    } catch (err) {
+        res.status(400).send(err);
+    }
+}
+const getUserById = async (req, res) => {
+    try {
+        let _id = req.params.id;
+        let data = await Customer.findById(_id);
+        res.send(data);
+    } catch (err) {
+        res.status(400).send(err);
+    }
+}
 
-module.exports = { customerRegisteration, customerLogin ,getProfileById}
+const editUser = async (req, res) => {
+    try {
+        let _id = req.params.id;
+        let body = req.body;
+        let data = await Customer.findByIdAndUpdate(_id, body);
+        // if(body.status){
+        //     const notification = new NotificationModel({
+        //         userId: newData._id,
+        //         userName: newData.name,
+        //         title: `  User  Verification `,
+        //         message: `   User  Verified     ${newData.name} !`,
+        //      });
+        // }
+        res.json({ status: true, msg: "User Updated" });
+    } catch (err) {
+        res.status(500).send(err);
+    }
+}
+const deleteUser = async (req, res) => {
+    try {
+        let _id = req.params.id;
+        let data = await Customer.findByIdAndDelete(_id);
+        res.json({ status: true, msg: "User Deteled" });
+    } catch (err) {
+        res.status(500).send(err);
+    }
+}
+
+module.exports = { registeration, login ,getProfileById,getAllUser,editUser,deleteUser}
