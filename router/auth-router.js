@@ -5,7 +5,7 @@ const router=express.Router();
 const { registeration, login ,getProfileById,getAllUser,editUser,deleteUser}=require("../controllers/auth-controller")
 
 router.get("/",(req,res)=>{
-    res.status(200).send("Welcome to SMENHDI APP auth router")
+    res.status(200).send("Welcome to SMENHDI APP ")
 })
 
 router.post("/registration",registeration);

@@ -4,6 +4,7 @@ const customerSchema = new mongoose.Schema({
     name: { type: String },
     email: { type: String },
     contact: { type: String },
+    address: { type: String },
     password: { type: String },
     profileImage: { type: String },
     role: { type: String, default: "CUSTOMER" },
