@@ -4,7 +4,7 @@ const Customer = require("../models/user-model");
 
 const registeration = async (req, res) => {
     try {
-        const { userName, email, contact, password } = req.body;
+        const {  email, contact  } = req.body;
 
         const userExist = await Customer.findOne({ contact: contact });
 
@@ -12,16 +12,9 @@ const registeration = async (req, res) => {
             return res.json({ status: false, msg: "Contact No. already exists" });
         }
 
-
-        const newCustomer = new Customer({
-            userName,
-            email,
-            contact,
-            password,
-        });
-
-
-        await newCustomer.save();
+        const newUser = new Customer(req.body);
+        
+        await newUser.save();
 
         res.json({ status: true, msg: "Registration Successfully" });
     }
