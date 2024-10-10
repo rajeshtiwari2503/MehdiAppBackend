@@ -13,7 +13,7 @@ router.post("/login",login);
 
 router.get("/getProfileById/:id",getProfileById )
 router.get("/getAllUser",getAllUser )
-router.get("/editUser/:id",editUser )
-router.get("/deleteUser/:id",deleteUser )
+router.patch("/editUser/:id",editUser )
+router.delete("/deleteUser/:id",deleteUser )
 
 module.exports=router;
