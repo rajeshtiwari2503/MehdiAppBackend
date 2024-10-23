@@ -11,10 +11,14 @@ const connectionDB=require("./utils/db")
 app.use(express.json());
 
 const authRouter=require("./router/auth-router")
+const mehndiDesignRouter=require("./router/mehndiDesign-router")
+const order=require("./router/order-router")
 
 // app.use("/api/auth",router)
   
 app.use(authRouter)
+app.use(mehndiDesignRouter)
+app.use(order)
 
 app.get("/",(req,res)=>{
     res.status(200).send("Welcome to SMENHDI APP")
