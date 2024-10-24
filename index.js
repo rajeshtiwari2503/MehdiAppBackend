@@ -10,6 +10,14 @@ const connectionDB=require("./utils/db")
 
 app.use(express.json());
 
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*'); // Allow all domains
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE'); // Allow specific methods
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Allow specific headers
+    next();
+  });
+  
+
 const authRouter=require("./router/auth-router")
 const mehndiDesignRouter=require("./router/mehndiDesign-router")
 const order=require("./router/order-router")
