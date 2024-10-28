@@ -28,6 +28,18 @@ const addOrder = async (req, res) => {
         res.status(400).send(err);
     }
 }
+const getOrderByUserId = async (req, res) => {
+    const { userId } = req.query;  
+
+    try {
+        
+        const data = await Order.find({ customerId: userId }).sort({ _id: -1 });
+        res.send(data);
+    } catch (err) {
+        res.status(400).send(err);
+    }
+};
+
 const getOrderById = async (req, res) => {
     try {
         let _id = req.params.id;
@@ -66,4 +78,4 @@ const deleteOrder = async (req, res) => {
     }
 }
 
-module.exports = { addOrder,getOrderById,getAllOrder,editOrder,deleteOrder}
+module.exports = { addOrder,getOrderByUserId,getOrderById,getAllOrder,editOrder,deleteOrder}

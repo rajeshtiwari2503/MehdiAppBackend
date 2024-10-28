@@ -2,11 +2,12 @@ const express=require("express");
 const router=express.Router();
 
 
-const { addOrder,getOrderById,getAllOrder,editOrder,deleteOrder}=require("../controllers/orderController")
+const { addOrder,getOrderByUserId,getOrderById,getAllOrder,editOrder,deleteOrder}=require("../controllers/orderController")
  
 router.post("/addOrder",addOrder);
 router.get("/getAllOrder",getAllOrder )
-router.patch("/getOrderById/:id",getOrderById )
+router.get("/getOrderById/:id",getOrderById )
+router.get("/getOrderByUserId/:id",getOrderByUserId )
 router.patch("/editOrder/:id",editOrder )
 router.delete("/deleteOrder/:id",deleteOrder )
 
