@@ -26,22 +26,35 @@ const registeration = async (req, res) => {
 
 
 
+ 
+
 const login = async (req, res) => {
     try {
-        const { email, password } = req.body;
-        const user = await Customer.findOne({ email })
+        const { email, password } = req.body; // 'identifier' can be either email or contact number
+// console.log(email,password);
+
+        // Find user by either email or contact number
+        const user = await Customer.findOne({
+            $or: [{ email: email }, { contact: +email }]
+        });
 
         if (!user) {
-            return res.status(400).json({ status: false, msg: "Invalid Credentials" })
+            return res.status(400).json({ status: false, msg: "Invalid Credentials" });
         }
-        res.status(200).json({ status: true, msg: "  Login successful", user });
-    }
-    catch (err) {
-        console.log(err);
 
+        // Directly compare password (not recommended)
+        if (user.password !== password) {
+            return res.status(400).json({ status: false, msg: "Invalid Credentials" });
+        }
 
+        // If login is successful, send response
+        res.status(200).json({ status: true, msg: "Login successful", user });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ status: false, msg: "Server Error" });
     }
-}
+};
+
 const getProfileById = async (req, res) => {
     try {
       let _id = req.params.id;
