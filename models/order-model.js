@@ -8,6 +8,8 @@ const orderSchema = new mongoose.Schema({
     address: { type: String },
     agentName: { type: String },
     agentId: { type: String },
+    design:{ type: String },
+    price:{ type: String },
     orderType: { type: String },
     order: { type: String, default: "ORDER" },
     status: { type: String, default: "ACTIVE" },
