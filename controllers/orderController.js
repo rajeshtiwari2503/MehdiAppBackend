@@ -29,11 +29,9 @@ const addOrder = async (req, res) => {
     }
 }
 const getOrderByUserId = async (req, res) => {
-    const { userId } = req.query;  
-
-    try {
-        
-        const data = await Order.find({ customerId: userId }).sort({ _id: -1 });
+    let _id = req.params.id;
+    try { 
+        const data = await Order.find({ customerId: _id }).sort({ _id: -1 });
         res.send(data);
     } catch (err) {
         res.status(400).send(err);
