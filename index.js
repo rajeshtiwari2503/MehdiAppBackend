@@ -21,15 +21,17 @@ app.use((req, res, next) => {
 const authRouter=require("./router/auth-router")
 const mehndiDesignRouter=require("./router/mehndiDesign-router")
 const order=require("./router/order-router")
+const chat=require("./router/chat-router")
 
 // app.use("/api/auth",router)
   
 app.use(authRouter)
 app.use(mehndiDesignRouter)
 app.use(order)
+app.use(chat)
 
 app.get("/",(req,res)=>{
-    res.status(200).send("Welcome to SMENHDI APP")
+    res.status(200).send("Welcome to S MENHDI APP")
 })
 
 const PORT=process.env.PORT;
