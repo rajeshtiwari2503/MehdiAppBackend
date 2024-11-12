@@ -1,24 +1,11 @@
 
 const MehndiDesign = require("../models/mehndiDesign-model");
-const addSparePart  = async (req, res) => {
-  
-    try{
-     let body = req.body;
-     let files = req.files;
-     let images = files?.map(f1 => f1.location);
-     let obj = new SparePartModal({ ...body, images: images });
-        await data.save();
-        res.json({status:true,msg:"SparePart   Added"});
-    }catch(err){
-        res.status(400).send(err);
-    }
-
-};
+ 
 
 const addMehndiDesign = async (req, res) => {
     try {
       const body = req.body;
-      console.log(body);
+    //   console.log(body);
       
       const designImage = req.file?.location; // Image URL from S3
   

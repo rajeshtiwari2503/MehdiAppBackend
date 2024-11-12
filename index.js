@@ -20,6 +20,7 @@ app.use((req, res, next) => {
 
 const authRouter=require("./router/auth-router")
 const mehndiDesignRouter=require("./router/mehndiDesign-router")
+const mehndiCategoryRouter=require("./router/mehndiCategory-router")
 const order=require("./router/order-router")
 const chat=require("./router/chat-router")
 
@@ -27,6 +28,7 @@ const chat=require("./router/chat-router")
   
 app.use(authRouter)
 app.use(mehndiDesignRouter)
+app.use(mehndiCategoryRouter)
 app.use(order)
 app.use(chat)
 
