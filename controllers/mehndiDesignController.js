@@ -1,28 +1,44 @@
 
 const MehndiDesign = require("../models/mehndiDesign-model");
+const addSparePart  = async (req, res) => {
+  
+    try{
+     let body = req.body;
+     let files = req.files;
+     let images = files?.map(f1 => f1.location);
+     let obj = new SparePartModal({ ...body, images: images });
+        await data.save();
+        res.json({status:true,msg:"SparePart   Added"});
+    }catch(err){
+        res.status(400).send(err);
+    }
 
+};
 
 const addMehndiDesign = async (req, res) => {
     try {
-        const { name } = req.body;
-
-        const nameExist = await MehndiDesign.findOne({ name: name });
-
-        if (nameExist) {
-            return res.json({ status: false, msg: "name already exists" });
-        }
-
-        const newDesign = new MehndiDesign(req.body);
-        
-        await newDesign.save();
-
-        res.json({ status: true, msg: "Design Created." });
+      const body = req.body;
+      console.log(body);
+      
+      const designImage = req.file?.location; // Image URL from S3
+  
+      const nameExist = await MehndiDesign.findOne({ name: body.name });
+  
+      if (nameExist) {
+        return res.json({ status: false, msg: "Name already exists" });
+      }
+  
+      const newDesign = new MehndiDesign({ ...body, image: designImage });
+  
+      await newDesign.save();
+  
+      res.json({ status: true, msg: "Design Created." });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ status: false, msg: "Server Error", error: err.message });
     }
-    catch (err) {
-        console.error(err);
-        return res.status(500).json({ status: false, msg: "Server Error", error: err.message });
-    }
-};
+  };
+  
 
  
  
@@ -43,11 +59,46 @@ const getMehndiDesignById = async (req, res) => {
         res.status(400).send(err);
     }
 }
+const editDesignImage = async (req, res) => {
+    try {
+        const _id = req.params.id;
+
+        // Get the file URL from the uploaded image
+        const imageUrl = req.file ? req.file.location : null;
+
+        // Create an update object with the fields that need to be updated
+        const updateFields = { ...req.body };  // Get fields from request body
+        if (imageUrl) {
+            updateFields.image = imageUrl;  // Only update image field if it's provided
+        }
+
+        // Update the design using findByIdAndUpdate
+        const updatedDesign = await MehndiDesign.findByIdAndUpdate(
+            _id, 
+            updateFields, 
+            { new: true }  // Return the updated document
+        );
+
+        if (!updatedDesign) {
+            return res.status(404).json({ status: false, msg: "Design not found" });
+        }
+
+        // Return the updated design as the response
+        res.json({ status: true, msg: "Updated successfully", data: updatedDesign });
+    } catch (err) {
+        console.error("Error updating design:", err);
+        res.status(500).json({ status: false, msg: "Error updating design", error: err.message });
+    }
+};
+
+
 
 const editMehndiDesign = async (req, res) => {
     try {
         let _id = req.params.id;
         let body = req.body;
+        console.log(body);
+        
         let data = await MehndiDesign.findByIdAndUpdate(_id, body);
         // if(body.status){
         //     const notification = new NotificationModel({
@@ -72,4 +123,4 @@ const deleteMehndiDesign = async (req, res) => {
     }
 }
 
-module.exports = { addMehndiDesign,getAllMehndiDesign,editMehndiDesign,deleteMehndiDesign}
+module.exports = { addMehndiDesign,getAllMehndiDesign,editDesignImage,editMehndiDesign,deleteMehndiDesign}
