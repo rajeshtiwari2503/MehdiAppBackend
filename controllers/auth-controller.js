@@ -23,7 +23,31 @@ const registeration = async (req, res) => {
         return res.status(500).json({ status: false, msg: "Server Error", error: err.message });
     }
 };
+const agentRegistration = async (req, res) => {
+    try {
+        const body = req.body;
+        //   console.log(body);
+          
+          const aadharImage = req.file?.location;
+        const {  email, contact  } = req.body;
 
+        const userExist = await Customer.findOne({ contact: contact });
+
+        if (userExist) {
+            return res.json({ status: false, msg: "Contact No. already exists" });
+        }
+
+        const newUser = new Customer({ ...body, aadharImage: aadharImage })
+        
+        await newUser.save();
+
+        res.json({ status: true, msg: "Registration Successfully" });
+    }
+    catch (err) {
+        console.error(err);
+        return res.status(500).json({ status: false, msg: "Server Error", error: err.message });
+    }
+};
 
 
  
@@ -123,4 +147,4 @@ const deleteUser = async (req, res) => {
     }
 }
 
-module.exports = { registeration, login ,getProfileById,getAllUser,editUser,deleteUser}
+module.exports = { registeration, login ,agentRegistration,getProfileById,getAllUser,editUser,deleteUser}
