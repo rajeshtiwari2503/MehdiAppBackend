@@ -5,20 +5,26 @@ const URI =  process.env.MONGO_URL
 // mongoose.connect()
 // console.log(process.env.MONGO_URL);
 
+ 
+
 const connectionDB = async () => {
-    
-    try {
-        await mongoose.connect(URI)
-        console.log("Connection successfully to DB");
+  try {
+    // Ensure deprecation warnings are enabled
+    mongoose.set('strictQuery', false); // Prevents strict query mode warnings
+    await mongoose.connect(URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true, // Ensures a more stable connection
+    });
+    console.log("Database connection successful");
+  } catch (err) {
+    console.error("Database connection failed:", err.message);
+    // Gracefully exit the process
+    process.exit(1);
+  }
+};
 
-    }
-    catch (err) {
-        console.log("Database connection failed");
-        process.exit(0)
-    }
-}
+module.exports = connectionDB;
 
-module.exports=connectionDB
 
 // const mongoose = require("mongoose");
 // require("dotenv").config();
