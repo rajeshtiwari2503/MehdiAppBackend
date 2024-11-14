@@ -7,6 +7,7 @@ const customerSchema = new mongoose.Schema({
     address: { type: String },
     password: { type: String },
     profileImage: { type: String },
+    aadharImage: { type: String },
     role: { type: String },
     verification: { type: String, default: "VERIFIED" },
     otp: { type: Number },
