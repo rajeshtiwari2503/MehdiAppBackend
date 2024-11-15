@@ -26,26 +26,34 @@ const registeration = async (req, res) => {
 const agentRegistration = async (req, res) => {
     try {
         const body = req.body;
-        //   console.log(body);
-          
-          const aadharImage = req.file?.location;
-        const {  email, contact  } = req.body;
 
-        const userExist = await Customer.findOne({ contact: contact });
+        // Check if the file was uploaded and extract the S3 URL
+        const aadharImage = req.file ? req.file.location : null; // URL from S3 if file uploaded
+
+        // Log request data for debugging
+        console.log("Request body:", body);
+        console.log("Uploaded file:", req.file);
+
+        const { email, contact } = req.body;
+
+        // Check if the user already exists by contact
+        const userExist = await Customer.findOne({ contact });
 
         if (userExist) {
             return res.json({ status: false, msg: "Contact No. already exists" });
         }
 
-        const newUser = new Customer({ ...body, aadharImage: aadharImage })
-        
+        // Create new customer with aadharImage URL and other data
+        const newUser = new Customer({ ...body, aadharImage });
+
         await newUser.save();
 
+        // Respond with success message
         res.json({ status: true, msg: "Registration Successfully" });
-    }
-    catch (err) {
+
+    } catch (err) {
         console.error(err);
-        return res.status(500).json({ status: false, msg: "Server Error", error: err.message });
+        res.status(500).json({ status: false, msg: "Server Error", error: err.message });
     }
 };
 
