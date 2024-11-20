@@ -7,6 +7,10 @@ const mehndiDesignSchema = new mongoose.Schema({
     // categoryId: { type: String },
     price: { type: String },
     image: { type: String },
+    groupOrder: {
+        type: Boolean,
+        default: false, // Default value if not provided
+    },
     status: { type: String, default: "ACTIVE" },
 }, { timestamps: true });
 
