@@ -9,8 +9,18 @@ const orderSchema = new mongoose.Schema({
     agentName: { type: String },
     agentId: { type: String },
     design:{ type: String },
+    designId:{ type: String },
     price:{ type: String },
-    orderType: { type: String },
+    noOfPeople: { type: String },
+    selectedDate: { type: String },
+    alternateNumber: { type: String },
+    selectedTime: { type: String },
+    bridalMehndi: { type: String },
+    image: { type: String },
+    groupOrder: {
+        type: Boolean,
+        default: false, // Default value if not provided
+    },
     order: { type: String, default: "ORDER" },
     status: { type: String, default: "ACTIVE" },
 }, { timestamps: true });

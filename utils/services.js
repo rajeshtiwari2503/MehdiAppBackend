@@ -104,7 +104,19 @@ const upload = () => multer({
     }
   })
 })
-
+const uploadApp =()=> multer({
+  storage: multers3({
+      s3,
+      bucket: 'sparetrade-bucket',
+      acl: 'public-read',
+      metadata: (req, file, cb) => {
+          cb(null, { fieldName: file.fieldname });
+      },
+      key: (req, file, cb) => {
+          cb(null, `uploads/${Date.now().toString()}-${file.originalname}`);
+      },
+  }),
+});
 
 
 // const QRCode = require('qrcode-generator');
@@ -125,6 +137,6 @@ const upload = () => multer({
 
 module.exports = {
 //   smsSend,
-  upload,
+  upload,uploadApp
 //   sendMail
 }

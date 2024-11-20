@@ -1,6 +1,6 @@
 const express=require("express");
 const router=express.Router();
-const {upload}  = require("../utils/services");
+const {uploadApp}  = require("../utils/services");
 
 const { registeration, login ,agentRegistration,getProfileById,getAllUser,editUser,deleteUser}=require("../controllers/auth-controller")
 
@@ -9,7 +9,7 @@ router.get("/",(req,res)=>{
 })
 
 router.post("/registration",registeration);
-router.post("/agentRegistration",upload().single("aadharImage"),agentRegistration);
+router.post("/agentRegistration",uploadApp().single("aadharImage"),agentRegistration);
 router.post("/login",login);
 
 router.get("/getProfileById/:id",getProfileById )
