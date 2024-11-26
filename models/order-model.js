@@ -22,7 +22,13 @@ const orderSchema = new mongoose.Schema({
         default: false, // Default value if not provided
     },
     order: { type: String, default: "ORDER" },
-    status: { type: String, default: "ACTIVE" },
+    amount: { type: Number, required: true },
+    currency: { type: String, required: true },
+    razorpayOrderId: { type: String, required: true },
+    razorpayPaymentId: { type: String },
+    razorpaySignature: { type: String },
+    status: { type: String, enum: ["PENDING", "PAID", "FAILED"], default: "PENDING" },
+   
 }, { timestamps: true });
 
 

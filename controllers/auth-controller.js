@@ -1,28 +1,121 @@
 
 const Customer = require("../models/user-model");
 
+const generateReferralCode = (length = 8) => {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return result;
+  };
+
+// const registeration = async (req, res) => {
+//     try {
+//         const {  email, contact  } = req.body;
+
+//         const userExist = await Customer.findOne({ contact: contact });
+
+//         if (userExist) {
+//             return res.json({ status: false, msg: "Contact No. already exists" });
+//         }
+
+//         const newUser = new Customer(req.body);
+        
+//         await newUser.save();
+
+//         res.json({ status: true, msg: "Registration Successfully" });
+//     }
+//     catch (err) {
+//         console.error(err);
+//         return res.status(500).json({ status: false, msg: "Server Error", error: err.message });
+//     }
+// };
+
+ 
 
 const registeration = async (req, res) => {
     try {
-        const {  email, contact  } = req.body;
+        const { email, contact, referralCode } = req.body;
 
-        const userExist = await Customer.findOne({ contact: contact });
-
+        // Check if the contact number already exists
+        const userExist = await Customer.findOne({ contact });
         if (userExist) {
             return res.json({ status: false, msg: "Contact No. already exists" });
         }
 
-        const newUser = new Customer(req.body);
-        
+        // Handle referral code logic
+        let referredByUser = null;
+        if (referralCode) {
+            referredByUser = await Customer.findOne({ referralCode });
+            if (!referredByUser) {
+                return res.json({ status: false, msg: "Invalid referral code" });
+            }
+        }
+
+        // Generate a unique referral code for the new user
+        let newReferralCode;
+        do {
+            newReferralCode = generateReferralCode();
+        } while (await Customer.findOne({ referralCode: newReferralCode }));
+
+        // Create the new user
+        const newUser = new Customer({
+            ...req.body,
+            referralCode: newReferralCode,
+            referredBy: referralCode || null,
+        });
+
         await newUser.save();
 
-        res.json({ status: true, msg: "Registration Successfully" });
-    }
-    catch (err) {
+        // Update referral count for the referring user
+        if (referredByUser) {
+            referredByUser.referralCount = (referredByUser.referralCount || 0) + 1;
+            await referredByUser.save();
+        }
+
+        res.json({ status: true, msg: "Registration Successfully", referralCode: newReferralCode });
+    } catch (err) {
         console.error(err);
         return res.status(500).json({ status: false, msg: "Server Error", error: err.message });
     }
 };
+
+// const agentRegistration = async (req, res) => {
+//     try {
+//         const body = req.body;
+
+//         // Check if the file was uploaded and extract the S3 URL
+//         const aadharImage = req.file ? req.file.location : null; // URL from S3 if file uploaded
+
+//         // Log request data for debugging
+//         console.log("Request body:", body);
+//         console.log("Uploaded file:", req.file);
+
+//         const { email, contact } = req.body;
+
+//         // Check if the user already exists by contact
+//         const userExist = await Customer.findOne({ contact });
+
+//         if (userExist) {
+//             return res.json({ status: false, msg: "Contact No. already exists" });
+//         }
+
+//         // Create new customer with aadharImage URL and other data
+//         const newUser = new Customer({ ...body, aadharImage });
+
+//         await newUser.save();
+
+//         // Respond with success message
+//         res.json({ status: true, msg: "Registration Successfully" });
+
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).json({ status: false, msg: "Server Error", error: err.message });
+//     }
+// };
+ 
+
 const agentRegistration = async (req, res) => {
     try {
         const body = req.body;
@@ -31,25 +124,54 @@ const agentRegistration = async (req, res) => {
         const aadharImage = req.file ? req.file.location : null; // URL from S3 if file uploaded
 
         // Log request data for debugging
-        console.log("Request body:", body);
-        console.log("Uploaded file:", req.file);
+        // console.log("Request body:", aadharImage);
+        // console.log("Uploaded file:", req.file);
 
-        const { email, contact } = req.body;
+        const { email, contact, referralCode } = req.body;
 
-        // Check if the user already exists by contact
+        // Check if the contact number already exists
         const userExist = await Customer.findOne({ contact });
-
         if (userExist) {
             return res.json({ status: false, msg: "Contact No. already exists" });
         }
 
-        // Create new customer with aadharImage URL and other data
-        const newUser = new Customer({ ...body, aadharImage });
+        // Validate referral code if provided
+        let referredByUser = null;
+        if (referralCode) {
+            referredByUser = await Customer.findOne({ referralCode });
+            if (!referredByUser) {
+                return res.json({ status: false, msg: "Invalid referral code" });
+            }
+        }
+
+        // Generate a unique referral code for the new agent
+        let newReferralCode;
+        do {
+            newReferralCode = generateReferralCode();
+        } while (await Customer.findOne({ referralCode: newReferralCode }));
+
+        // Create new customer with aadharImage URL, referral code, and other data
+        const newUser = new Customer({
+            ...body,
+            aadharImage,
+            referralCode: newReferralCode,
+            referredBy: referralCode || null,
+        });
 
         await newUser.save();
 
-        // Respond with success message
-        res.json({ status: true, msg: "Registration Successfully" });
+        // Update referral count for the referring user
+        if (referredByUser) {
+            referredByUser.referralCount = (referredByUser.referralCount || 0) + 1;
+            await referredByUser.save();
+        }
+
+        // Respond with success message and referral code
+        res.json({
+            status: true,
+            msg: "Registration Successfully",
+            referralCode: newReferralCode,
+        });
 
     } catch (err) {
         console.error(err);
