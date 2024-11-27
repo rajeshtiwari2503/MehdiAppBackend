@@ -158,11 +158,11 @@ const verifiOrder= async (req, res) => {
     
     
     try {
-        console.log(req.body);
+        // console.log(req.body);
       const { razorpayOrderId, razorpayPaymentId, razorpaySignature } = req.body;
   
       const order = await Order.findOne({ razorpayOrderId });
-      console.log(order);
+      // console.log(order);
       if (!order) {
         return res.status(404).json({ status: false, msg: "Order not found." });
       }
