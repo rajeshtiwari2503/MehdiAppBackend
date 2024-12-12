@@ -73,8 +73,25 @@ const registeration = async (req, res) => {
             referredByUser.referralCount = (referredByUser.referralCount || 0) + 1;
             await referredByUser.save();
         }
-
-        res.json({ status: true, msg: "Registration Successfully", referralCode: newReferralCode });
+        const responseData = {
+            _id: newUser._id,
+            name: newUser.name,
+            email: newUser.email,
+            contact: newUser.contact,
+            profileImage: newUser.profileImage,
+            aadharImage: newUser.aadharImage,
+            address: newUser.address,
+            pincode: newUser.pincode,
+            role: newUser.role,
+            verification: newUser.verification,
+            referralCode: newUser.referralCode,
+            referredBy: newUser.referredBy,
+            referralCount: newUser.referralCount,
+            status: newUser.status,
+          };
+        //   console.log("responseData",responseData);
+          
+        res.json({ status: true, msg: "Registration Successfully",user: responseData, referralCode: newReferralCode });
     } catch (err) {
         console.error(err);
         return res.status(500).json({ status: false, msg: "Server Error", error: err.message });
@@ -167,9 +184,27 @@ const agentRegistration = async (req, res) => {
         }
 
         // Respond with success message and referral code
+        const responseData = {
+            _id: newUser._id,
+            name: newUser.name,
+            email: newUser.email,
+            contact: newUser.contact,
+            profileImage: newUser.profileImage,
+            aadharImage: newUser.aadharImage,
+            address: newUser.address,
+            pincode: newUser.pincode,
+            role: newUser.role,
+            verification: newUser.verification,
+            referralCode: newUser.referralCode,
+            referredBy: newUser.referredBy,
+            referralCount: newUser.referralCount,
+            status: newUser.status,
+          };
+        //   console.log("responseData",responseData);
         res.json({
             status: true,
             msg: "Registration Successfully",
+            user:responseData,
             referralCode: newReferralCode,
         });
 
