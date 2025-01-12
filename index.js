@@ -49,6 +49,10 @@ app.use(function (req, res, next) {
   
 
 
+
+
+
+// app.use("/api/auth",router)
 // app.use("/api/auth",router)
   
 app.use(authRouter)
