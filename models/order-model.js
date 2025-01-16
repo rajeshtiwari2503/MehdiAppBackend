@@ -8,6 +8,7 @@ const orderSchema = new mongoose.Schema({
     address: { type: String },
     agentName: { type: String },
     agentId: { type: String },
+    agentContact: { type: String },
     design:{ type: String },
     designId:{ type: String },
     price:{ type: String },

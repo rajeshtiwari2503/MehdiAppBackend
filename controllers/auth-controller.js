@@ -274,6 +274,19 @@ const getProfileById = async (req, res) => {
         res.status(400).send(err);
     }
 }
+
+const getAllArtist = async (req, res) => {
+    try {
+      // Find users with the role "AGENT", sorted by the most recently created
+      const data = await Customer.find({ role: "AGENT" }).sort({ _id: -1 });
+      res.send(data);
+    } catch (err) {
+      // Return a 400 status code with the error message if something goes wrong
+      res.status(400).send(err);
+    }
+  };
+  
+
 const getUserById = async (req, res) => {
     try {
         let _id = req.params.id;
@@ -312,4 +325,4 @@ const deleteUser = async (req, res) => {
     }
 }
 
-module.exports = { registeration, login ,agentRegistration,getProfileById,getAllUser,editUser,deleteUser}
+module.exports = { registeration, login ,agentRegistration,getProfileById,getAllUser,getAllArtist,editUser,deleteUser}
