@@ -400,6 +400,49 @@ const addOrder = async (req, res) => {
   }
 };
 
+
+
+const asignArtistInOrder = async (req, res) => {
+  try {
+    const _id = req.params.id; // Order ID
+    const { agentId, agentName, agentContact  } = req.body; // Data from the request body
+
+    // Validate required fields
+    if (!agentId || !agentName || !agentContact  ) {
+      return res.status(400).json({ status: false, msg: "Agent details and timeline update are required." });
+    }
+    const newTimeline = {
+      status: 'Asigned Artist Your Order.',
+      details: [`Asign Artist Your Order. Artist contact No.: ${agentName} , ${agentContact}`],
+      date: new Date(),
+    };
+    // Update the order with agent details and timeline
+    const updatedOrder = await Order.findByIdAndUpdate(
+      _id,
+      {
+        $set: {
+          agentId,
+          agentName,
+          agentContact,
+        status:"Asigned Artist"
+        },
+        $push: {
+          timeline:newTimeline  
+        }
+      },
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedOrder) {
+      return res.status(404).json({ status: false, msg: "Order not found." });
+    }
+
+    res.json({ status: true, msg: "Artist assigned  your order", updatedOrder });
+  } catch (err) {
+    res.status(500).json({ status: false, msg: "Server error.", error: err.message });
+  }
+};
+
   const getAllOrder = async (req, res) => {
     try {
         const data = await Order.find({}).sort({ _id: -1 });
@@ -456,4 +499,4 @@ const deleteOrder = async (req, res) => {
     }
 }
 
-module.exports = { addOrder,verifiOrder,getOrderByUserId,getOrderById,getAllOrder,editOrder,deleteOrder}
+module.exports = { addOrder,verifiOrder,getOrderByUserId,getOrderById,getAllOrder,asignArtistInOrder,editOrder,deleteOrder}
