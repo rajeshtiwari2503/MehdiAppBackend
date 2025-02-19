@@ -20,33 +20,25 @@ const chat=require("./router/chat-router")
 
 app.use(express.json());
 
-app.use(cors({
-    origin: '*',
-    methods: ['GET', 'POST','PATCH', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-}));
+const corsOptions = {
+    origin: '*', // Replace '*' with specific domains for security
+    methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Referer', 'Origin', 'X-Requested-With', 'Accept'],
+    preflightContinue: false,
+    optionsSuccessStatus: 204
+};
+app.use(cors(corsOptions));
 
-// Handle OPTIONS requests globally
-app.options('*', (req, res) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
-    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-    res.sendStatus(204); // No content, but successfully handled
-});
 
-app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header(
-        "Access-Control-Allow-Methods",
-        "GET, POST, OPTIONS, PUT, PATCH, DELETE, HEAD"
-    );
-    res.header(
-        "Access-Control-Allow-Headers",
-        "Origin, X-Requested-With, Content-Type, Accept"
-    );
+
+// Handle OPTIONS preflight requests
+app.options('*', cors(corsOptions));
+
+// Example Referrer-Policy header
+app.use((req, res, next) => {
+    res.header("Referrer-Policy", "strict-origin-when-cross-origin");
     next();
 });
-  
 
 
 
