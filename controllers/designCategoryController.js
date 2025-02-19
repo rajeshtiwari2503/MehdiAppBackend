@@ -8,11 +8,11 @@ const addMehndiCategory = async (req, res) => {
       
       const designImage = req.file?.location; // Image URL from S3
   
-      const nameExist = await MehndiCategory.findOne({ name: body.name });
+    //   const nameExist = await MehndiCategory.findOne({ name: body.name });
   
-      if (nameExist) {
-        return res.json({ status: false, msg: "Name already exists" });
-      }
+    //   if (nameExist) {
+    //     return res.json({ status: false, msg: "Name already exists" });
+    //   }
         const newDesign = new MehndiCategory({ ...body, image: designImage });
   
         await newDesign.save();
