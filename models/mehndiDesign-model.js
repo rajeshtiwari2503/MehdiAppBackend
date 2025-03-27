@@ -6,6 +6,9 @@ const mehndiDesignSchema = new mongoose.Schema({
     // categoryName: { type: String },
     // categoryId: { type: String },
     price: { type: String },
+    review: { type: Number, default: 0 },
+    rating: { type: Number, default: 0 },
+    discount: { type: Number, default: 0 },
     image: { type: String },
     groupOrder: {
         type: Boolean,
